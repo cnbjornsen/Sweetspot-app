@@ -13,7 +13,11 @@ let package = Package(
     targets: [
         .target(
             name: "SweetSpotKit",
-            path: "Sources/SweetSpotKit"
+            path: "Sources/SweetSpotKit",
+            resources: [
+                .process("Content/quotes.json"),
+                .process("Content/memes.json"),
+            ]
         ),
         .testTarget(
             name: "SweetSpotKitTests",

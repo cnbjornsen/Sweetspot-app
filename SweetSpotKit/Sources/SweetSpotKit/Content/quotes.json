@@ -1,0 +1,40 @@
+[
+  { "id": "11111111-0000-0000-0000-000000000001", "text": "Welcome to Sweet Spot. Let's find your zone.", "mood": "onboarding", "weight": 1 },
+  { "id": "11111111-0000-0000-0000-000000000002", "text": "A few quick questions and we're off.", "mood": "onboarding", "weight": 1 },
+  { "id": "11111111-0000-0000-0000-000000000003", "text": "The sweet spot is the buzz before the regret.", "mood": "onboarding", "weight": 1 },
+
+  { "id": "22222222-0000-0000-0000-000000000001", "text": "You're nailing it. Keep the rhythm.", "mood": "encouraging", "weight": 2 },
+  { "id": "22222222-0000-0000-0000-000000000002", "text": "Sip, don't gulp.", "mood": "encouraging", "weight": 2 },
+  { "id": "22222222-0000-0000-0000-000000000003", "text": "Hydration is a power move. 💧", "mood": "encouraging", "weight": 2 },
+  { "id": "22222222-0000-0000-0000-000000000004", "text": "Slow and steady wins the night.", "mood": "encouraging", "weight": 1 },
+  { "id": "22222222-0000-0000-0000-000000000005", "text": "Pace = poise.", "mood": "encouraging", "weight": 1 },
+  { "id": "22222222-0000-0000-0000-000000000006", "text": "You're in the band. Stay there.", "mood": "encouraging", "weight": 2 },
+  { "id": "22222222-0000-0000-0000-000000000007", "text": "Future-you is sending love.", "mood": "encouraging", "weight": 1 },
+  { "id": "22222222-0000-0000-0000-000000000008", "text": "Look at you, being a grown-up about it.", "mood": "encouraging", "weight": 1 },
+  { "id": "22222222-0000-0000-0000-000000000009", "text": "Tonight is going to be a good one.", "mood": "encouraging", "weight": 1 },
+  { "id": "22222222-0000-0000-0000-000000000010", "text": "Smooth sailing.", "mood": "encouraging", "weight": 1 },
+  { "id": "22222222-0000-0000-0000-000000000011", "text": "Every minute in the band is a win.", "mood": "encouraging", "weight": 1 },
+  { "id": "22222222-0000-0000-0000-000000000012", "text": "You came here to enjoy it, not survive it.", "mood": "encouraging", "weight": 1 },
+
+  { "id": "33333333-0000-0000-0000-000000000001", "text": "Be honest — your morning self will thank you.", "mood": "cautionary", "weight": 2 },
+  { "id": "33333333-0000-0000-0000-000000000002", "text": "Did anything sneak in? It's ok, just log it.", "mood": "cautionary", "weight": 2 },
+  { "id": "33333333-0000-0000-0000-000000000003", "text": "Hangovers compound. So does honesty.", "mood": "cautionary", "weight": 1 },
+  { "id": "33333333-0000-0000-0000-000000000004", "text": "Counting to one is harder than it looks.", "mood": "cautionary", "weight": 1 },
+  { "id": "33333333-0000-0000-0000-000000000005", "text": "A glass of water now buys two hours later.", "mood": "cautionary", "weight": 2 },
+  { "id": "33333333-0000-0000-0000-000000000006", "text": "Tell the truth. The math has receipts.", "mood": "cautionary", "weight": 1 },
+  { "id": "33333333-0000-0000-0000-000000000007", "text": "Not driving tonight, right? Right.", "mood": "cautionary", "weight": 2 },
+
+  { "id": "44444444-0000-0000-0000-000000000001", "text": "Cheers! Time for the next one. 🎉", "mood": "fanfare", "weight": 2 },
+  { "id": "44444444-0000-0000-0000-000000000002", "text": "Confetti time. You earned it.", "mood": "fanfare", "weight": 2 },
+  { "id": "44444444-0000-0000-0000-000000000003", "text": "Ding ding ding. 🍻", "mood": "fanfare", "weight": 1 },
+  { "id": "44444444-0000-0000-0000-000000000004", "text": "Sweet spot delivery, hot and fresh.", "mood": "fanfare", "weight": 1 },
+  { "id": "44444444-0000-0000-0000-000000000005", "text": "Permission granted. Sip responsibly.", "mood": "fanfare", "weight": 2 },
+  { "id": "44444444-0000-0000-0000-000000000006", "text": "Round 2 / Round 3 / Round n. Cheers!", "mood": "fanfare", "weight": 1 },
+  { "id": "44444444-0000-0000-0000-000000000007", "text": "🥂 Right on schedule.", "mood": "fanfare", "weight": 2 },
+
+  { "id": "55555555-0000-0000-0000-000000000001", "text": "Numbers don't lie. Memories do.", "mood": "stat", "weight": 2 },
+  { "id": "55555555-0000-0000-0000-000000000002", "text": "Time in the band is a flex.", "mood": "stat", "weight": 1 },
+  { "id": "55555555-0000-0000-0000-000000000003", "text": "Honest extras > pretend perfection.", "mood": "stat", "weight": 1 },
+  { "id": "55555555-0000-0000-0000-000000000004", "text": "Look at that curve. Beautiful.", "mood": "stat", "weight": 1 },
+  { "id": "55555555-0000-0000-0000-000000000005", "text": "Drink type pie chart > horoscope.", "mood": "stat", "weight": 1 }
+]
