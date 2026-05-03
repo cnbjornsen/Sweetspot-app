@@ -1,0 +1,22 @@
+Sweet Spot — sound asset credits
+
+The bundled fanfare must be a royalty-free or properly licensed sound. Until
+you drop one in here, the app silently no-ops the in-app fanfare and falls
+back to the system default for the lock-screen notification.
+
+When you add a sound:
+
+1. Convert to AAC-in-CAF, ≤30 seconds:
+       afconvert -f caff -d aac in.wav fanfare.caf
+2. Drop fanfare.caf into SweetSpot/Resources/ in Xcode (added to the
+   SweetSpot target).
+3. Record the source and license below.
+
+---
+
+| Asset       | Source URL              | License                 | Notes |
+|-------------|-------------------------|-------------------------|-------|
+| fanfare.caf | <add your source>       | <add license, e.g. CC0> |       |
+
+Suggested royalty-free sources: Pixabay, Freesound (CC0 only),
+incompetech.com (Creative Commons).
