@@ -114,7 +114,16 @@ export function Settings({ app }: { app: AppStateHookResult }) {
         </p>
       </div>
 
-      <button className="btn danger full" style={{ marginTop: 16 }}
+      <button className="btn secondary full" style={{ marginTop: 16 }}
+              onClick={() => app.upsertProfile((p) => ({
+                ...p,
+                ageGateConfirmedAt: undefined,
+                disclaimerAcknowledgedAt: undefined,
+              }))}>
+        Re-do setup (keep history)
+      </button>
+
+      <button className="btn danger full" style={{ marginTop: 8 }}
               onClick={() => setConfirmClear(true)}>
         Delete all data
       </button>

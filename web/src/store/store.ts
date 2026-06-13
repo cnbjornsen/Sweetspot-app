@@ -2,7 +2,8 @@ import { Occasion, Session, UserProfile } from '../core/types';
 import { OCCASION_TEMPLATES } from '../core/quotes';
 import { defaultUnitSystem, localeStandardDrinkGrams } from '../core/locale';
 
-const KEY = 'sweetspot.state.v1';
+const KEY = 'sweetspot.state.v2';
+const OLD_KEYS = ['sweetspot.state.v1'];
 
 export interface AppState {
   profile: UserProfile | null;
@@ -54,6 +55,7 @@ export function saveState(state: AppState): void {
 export function clearAll(): void {
   if (typeof localStorage === 'undefined') return;
   localStorage.removeItem(KEY);
+  for (const oldKey of OLD_KEYS) localStorage.removeItem(oldKey);
 }
 
 export function defaultProfile(): UserProfile {

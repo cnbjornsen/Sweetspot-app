@@ -2,16 +2,22 @@ import { useState } from 'react';
 import { AppStateHookResult } from '../hooks/useAppState';
 import { defaultProfile } from '../store/store';
 import { kgToLb, lbToKg, WEIGHT_BOUNDS } from '../core/locale';
+import { BiologicalSex } from '../core/types';
 
 type Step = 'age' | 'disclaimer' | 'units' | 'weight' | 'sex' | 'notifications';
 
 export function Onboarding({ app }: { app: AppStateHookResult }) {
   const [step, setStep] = useState<Step>('age');
   const [draft, setDraft] = useState(() => app.state.profile ?? defaultProfile());
+  // Track whether the user has explicitly set these — so they can't sleepwalk
+  // past the screens with defaults.
+  const [weightTouched, setWeightTouched] = useState(false);
+  const [sexChoice, setSexChoice] = useState<BiologicalSex | null>(null);
 
   function commit() {
     app.upsertProfile(() => ({
       ...draft,
+      sex: sexChoice ?? draft.sex,
       ageGateConfirmedAt: draft.ageGateConfirmedAt ?? Date.now(),
       disclaimerAcknowledgedAt: draft.disclaimerAcknowledgedAt ?? Date.now(),
     }));
@@ -66,33 +72,50 @@ export function Onboarding({ app }: { app: AppStateHookResult }) {
         )}
         {step === 'weight' && (
           <Step title="Your weight" icon="🏋️"
-            sub="The only number that drives the BAC math. Stays on this device.">
+            sub="The single number that drives the BAC math. Type it in.">
             <WeightInput
               weightKg={draft.weightKg}
               unitSystem={draft.unitSystem}
-              onChange={(kg) => setDraft({ ...draft, weightKg: kg })}
+              touched={weightTouched}
+              onChange={(kg) => { setDraft({ ...draft, weightKg: kg }); setWeightTouched(true); }}
             />
+            {!weightTouched && (
+              <p className="notice">Please confirm your weight — defaults are just placeholders.</p>
+            )}
             <button className="btn full" onClick={() => setStep('sex')}
-                    disabled={!withinBounds(draft.weightKg, draft.unitSystem)}>
+                    disabled={!weightTouched || !withinBounds(draft.weightKg, draft.unitSystem)}>
               Continue
             </button>
           </Step>
         )}
         {step === 'sex' && (
           <Step title="Biological sex" icon="👥"
-            sub="The Widmark formula uses different distribution ratios for men and women.">
-            <div className="segmented">
-              <button className={draft.sex === 'male' ? 'active' : ''}
-                      onClick={() => setDraft({ ...draft, sex: 'male' })}>Male</button>
-              <button className={draft.sex === 'female' ? 'active' : ''}
-                      onClick={() => setDraft({ ...draft, sex: 'female' })}>Female</button>
+            sub="The Widmark formula uses different distribution ratios for men and women. We have to ask.">
+            <div className="col" style={{ gap: 10 }}>
+              <SexChoiceButton label="Male" emoji="♂️"
+                selected={sexChoice === 'male'}
+                onClick={() => setSexChoice('male')} />
+              <SexChoiceButton label="Female" emoji="♀️"
+                selected={sexChoice === 'female'}
+                onClick={() => setSexChoice('female')} />
             </div>
-            <button className="btn full" onClick={() => setStep('notifications')}>Continue</button>
+            {sexChoice === null && (
+              <p className="notice">Pick one to continue.</p>
+            )}
+            <button className="btn full"
+                    disabled={sexChoice === null}
+                    onClick={() => {
+                      if (sexChoice) setDraft({ ...draft, sex: sexChoice });
+                      setStep('notifications');
+                    }}>
+              Continue
+            </button>
           </Step>
         )}
         {step === 'notifications' && (
           <Step title="Stay in the band" icon="🔔"
             sub="We'll only ping you when your next drink is due. No marketing, no nags.">
+            <SummaryCard draft={draft} sex={sexChoice ?? draft.sex} />
             <button className="btn full" onClick={async () => {
               if (typeof Notification !== 'undefined') {
                 try { await Notification.requestPermission(); } catch { /* noop */ }
@@ -128,32 +151,107 @@ function Step({ title, icon, sub, children }: {
   );
 }
 
-function WeightInput({ weightKg, unitSystem, onChange }: {
+function WeightInput({ weightKg, unitSystem, touched, onChange }: {
   weightKg: number;
   unitSystem: 'metric' | 'imperial';
+  touched: boolean;
   onChange: (kg: number) => void;
 }) {
-  const display = unitSystem === 'metric'
-    ? `${weightKg.toFixed(0)} kg`
-    : `${kgToLb(weightKg).toFixed(0)} lb`;
+  const display = unitSystem === 'metric' ? weightKg : kgToLb(weightKg);
   const min = unitSystem === 'metric' ? WEIGHT_BOUNDS.minKg : WEIGHT_BOUNDS.minLb;
   const max = unitSystem === 'metric' ? WEIGHT_BOUNDS.maxKg : WEIGHT_BOUNDS.maxLb;
-  const value = unitSystem === 'metric' ? weightKg : kgToLb(weightKg);
+  const suffix = unitSystem === 'metric' ? 'kg' : 'lb';
 
   return (
     <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-      <div className="title center mono">{display}</div>
+      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 8 }}>
+        <input
+          type="number"
+          value={touched ? Math.round(display) : ''}
+          placeholder={String(Math.round(display))}
+          min={min}
+          max={max}
+          step={1}
+          inputMode="numeric"
+          onChange={(e) => {
+            const n = Number(e.target.value);
+            if (Number.isFinite(n) && n > 0) {
+              onChange(unitSystem === 'metric' ? n : lbToKg(n));
+            }
+          }}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            outline: 'none',
+            fontSize: 48,
+            fontWeight: 800,
+            width: 140,
+            textAlign: 'right',
+            color: touched ? '#fff' : 'rgba(255,255,255,0.45)',
+            fontVariantNumeric: 'tabular-nums',
+          }}
+        />
+        <span style={{ fontSize: 20, color: 'rgba(255,255,255,0.7)' }}>{suffix}</span>
+      </div>
       <input
         type="range"
         min={min}
         max={max}
         step={1}
-        value={Math.round(value)}
+        value={Math.round(display)}
         onChange={(e) => {
           const n = Number(e.target.value);
           onChange(unitSystem === 'metric' ? n : lbToKg(n));
         }}
       />
+    </div>
+  );
+}
+
+function SexChoiceButton({ label, emoji, selected, onClick }: {
+  label: string;
+  emoji: string;
+  selected: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        padding: '18px 16px',
+        borderRadius: 14,
+        background: selected ? 'rgba(255,255,255,0.95)' : 'rgba(0,0,0,0.25)',
+        color: selected ? '#0e0a1f' : '#fff',
+        fontSize: 18,
+        fontWeight: 600,
+        border: selected ? '2px solid #fff' : '2px solid rgba(255,255,255,0.25)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 10,
+      }}>
+      <span style={{ fontSize: 22 }}>{emoji}</span>
+      <span>{label}</span>
+      {selected && <span style={{ marginLeft: 8 }}>✓</span>}
+    </button>
+  );
+}
+
+function SummaryCard({ draft, sex }: {
+  draft: { weightKg: number; unitSystem: 'metric' | 'imperial' };
+  sex: BiologicalSex;
+}) {
+  const weightDisplay = draft.unitSystem === 'metric'
+    ? `${Math.round(draft.weightKg)} kg`
+    : `${Math.round(kgToLb(draft.weightKg))} lb`;
+  return (
+    <div className="card">
+      <div className="h3" style={{ marginBottom: 8 }}>Your numbers</div>
+      <div className="spread"><span>Weight</span><strong className="mono">{weightDisplay}</strong></div>
+      <div className="spread"><span>Sex</span><strong>{sex === 'male' ? 'Male' : 'Female'}</strong></div>
+      <p className="subtitle" style={{ fontSize: 12, marginTop: 8 }}>
+        You can change these in Settings any time.
+      </p>
     </div>
   );
 }
